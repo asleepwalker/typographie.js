@@ -13,6 +13,9 @@ export default class Typographie {
 		if (this._actions.includes('mathchars')) {
 			text = this.processMath(text);
 		}
+		if (this._actions.includes('mathchars') || this._actions.includes('dashes')) {
+			text = this.processMinuses(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -96,6 +99,11 @@ export default class Typographie {
 			[/\{ang}/g          , '\u{2220}']
 		]);
 		return this.performReplace(text, table);
+	}
+	processMinuses(text) {
+		return text
+			.replace(/([ ])-(?=[\d])/g, '$1\u{2013}')
+			.replace(/^-(?=[\d])/gm, '\u{2013}');
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
