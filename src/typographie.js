@@ -25,6 +25,9 @@ export default class Typographie {
 		if (this._actions.includes('angles')) {
 			text = this.processAngles(text);
 		}
+		if (this._actions.includes('dblspace')) {
+			text = this.processMultipleSpaces(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -155,6 +158,9 @@ export default class Typographie {
 			[/("[^"]*\d)"([^"]*?")/g , '$1\u{2033}$2']
 		]);
 		return this.performReplace(text, table);
+	}
+	processMultipleSpaces(text) {
+		return text.replace(/[ ]{2,}/g, ' ');
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
