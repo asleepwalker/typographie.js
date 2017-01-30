@@ -19,6 +19,9 @@ export default class Typographie {
 		if (this._actions.includes('punctuation')) {
 			text = this.processPunctuation(text);
 		}
+		if (this._actions.includes('specialspaces')) {
+			text = this.processSpecialSpaces(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -132,6 +135,14 @@ export default class Typographie {
 		]);
 		preservedText = this.performReplace(preservedText, table);
 		return this.restoreParts(preservedText, parts);
+	}
+	processSpecialSpaces(text) {
+		const table = new Map([
+			[/([\u2116\u00a7])[\s]*(?=[\d])/g , '$1 '],
+			[/([\d])[\s]*(?=\u00b0[CСF])/g    , '$1 '],
+			[/([\d])[\s]*(?=%)/g              , '$1']
+		]);
+		return this.performReplace(text, table);
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
