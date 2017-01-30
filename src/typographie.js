@@ -16,6 +16,9 @@ export default class Typographie {
 		if (this._actions.includes('mathchars') || this._actions.includes('dashes')) {
 			text = this.processMinuses(text);
 		}
+		if (this._actions.includes('punctuation')) {
+			text = this.processPunctuation(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -105,8 +108,46 @@ export default class Typographie {
 			.replace(/([ ])-(?=[\d])/g, '$1\u{2013}')
 			.replace(/^-(?=[\d])/gm, '\u{2013}');
 	}
+	processPunctuation(text) {
+		let table = new Map();
+
+		if (this._actions.includes('dashes')) {
+			table.set(/[-]{2,5}/g, '\u{2013}');
+		}
+
+		table.set(/(^|\s)([-\u2013])(?=[^\s])/gm, '$1$2 ');
+		table.set(/([^\s])([-\u2013])($|\s)/gm, '$1 $2$3');
+		table.set(/([.,!?:)])(?=[^ \n"\'.,;!?&:\]\)<»{)])/g, '$1 ');
+		table.set(/[ ]*(?=[.,;!?:])/g, '');
+
+		if (this._actions.includes('nbsp')) {
+			table.set(/ ([-\u2013])/g, '\u{00a0}$1');
+		}
+
+		let {preservedText, parts} = this.preserveParts(text, [
+			/[\d]+([.,][\d]+)+/g,
+			/^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/gi,
+			/((([a-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[a-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[a-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi,
+			/[:;.][\'_-]{0,2}[.,edpobnsu*#@|()&\$308ехорвъэ]/gi
+		]);
+		preservedText = this.performReplace(preservedText, table);
+		return this.restoreParts(preservedText, parts);
+	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
+		return text;
+	}
+	preserveParts(text, exceptions) {
+		let parts = new Map();
+		exceptions.map((pattern) => text = text.replace(pattern, (match) => {
+			const code = String(Math.random()).substr(2);
+			parts.set(code, match);
+			return '{' + code + '}';
+		}));
+		return { preservedText: text, parts };
+	}
+	restoreParts(text, parts) {
+		parts.forEach((o, i) => text = text.replace('{' + i + '}', o));
 		return text;
 	}
 }
