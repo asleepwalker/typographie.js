@@ -1,5 +1,5 @@
 module.exports = {
-	entry: './src/typographie.js',
+	entry: './src/index.js',
 	output: {
 		path: './lib',
 		filename: 'typographie.js',
