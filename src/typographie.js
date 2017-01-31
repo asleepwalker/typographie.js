@@ -28,6 +28,9 @@ export default class Typographie {
 		if (this._actions.includes('dblspace')) {
 			text = this.processMultipleSpaces(text);
 		}
+		if (this._actions.includes('quotes')) {
+			text = this.processQoutes(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -161,6 +164,15 @@ export default class Typographie {
 	}
 	processMultipleSpaces(text) {
 		return text.replace(/[ ]{2,}/g, ' ');
+	}
+	processQoutes(text) {
+		const table = new Map([
+			[/(^|[\s>};\(\[-])"/g                              , '$1\u{00ab}'],
+			[/"([\s-\.!,:;\?\)\]\n\r]|$)/g                     , '\u{00bb}$1'],
+			[/([^\s{])"([^\s}])/g                              , '$1\u{00bb}$2'],
+			[/(\u00ab[^\s\u00ab]*)\u00bb(.*?\u00bb.*?\u00bb)/g , '$1\u{00ab}$2']
+		]);
+		return this.performReplace(text, table);
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
