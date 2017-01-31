@@ -43,6 +43,9 @@ export default class Typographie {
 		if (this._actions.includes('nbsp')) {
 			text = this.processNbsps(text);
 		}
+		if (this._actions.includes('hellip')) {
+			text = this.processHellips(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -214,6 +217,9 @@ export default class Typographie {
 	}
 	processNbsps(text) {
 		return text.replace(/((^|[\s])[a-zа-яёіїєґ\'′]{1,2})[ ]/gi, '$1\u{00a0}');
+	}
+	processHellips(text) {
+		return text.replace(/\.{2,5}/g, '\u{2026}');
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
