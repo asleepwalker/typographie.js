@@ -33,6 +33,8 @@ export default class Typographie {
 
 			if (this._actions.includes('inquot')) {
 				text = this.processInnerQoutes(text);
+			} else {
+				text = this.processStackingQoutes(text);
 			}
 		}
 		return text;
@@ -184,6 +186,11 @@ export default class Typographie {
 			text = text.replace(/(\u201e[^\u201e\u201c\u00ab\u00bb]*)\u00bb/gm, '$1\u{201c}');
 		}
 		return text;
+	}
+	processStackingQoutes(text) {
+		return text
+			.replace(/\u00ab{2,}/g, '\u{00ab}')
+			.replace(/\u00bb{2,}/g, '\u{00bb}');
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
