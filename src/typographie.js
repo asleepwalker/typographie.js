@@ -37,6 +37,9 @@ export default class Typographie {
 				text = this.processStackingQoutes(text);
 			}
 		}
+		if (this._actions.includes('dashes')) {
+			text = this.processDashes(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -191,6 +194,20 @@ export default class Typographie {
 		return text
 			.replace(/\u00ab{2,}/g, '\u{00ab}')
 			.replace(/\u00bb{2,}/g, '\u{00bb}');
+	}
+	processDashes(text) {
+		let table = new Map([
+			[/(^|\n|["\u201e\u00ab])--?(\s)/gm , '$1\u{2014}$2'],
+			[/([\d])-(?=[\d])/gm               , '$1\u{2013}']
+		]);
+
+		if (this._actions.includes('nbsp')) {
+			table.set(/(\s)--?($|\s)/g, '\u{00a0}\u{2014}$2');
+		} else {
+			table.set(/(\s)--?($|\s)/g, ' \u{2014}$2');
+		}
+
+		return this.performReplace(text, table);
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
