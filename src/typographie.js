@@ -30,6 +30,10 @@ export default class Typographie {
 		}
 		if (this._actions.includes('quotes')) {
 			text = this.processQoutes(text);
+
+			if (this._actions.includes('inquot')) {
+				text = this.processInnerQoutes(text);
+			}
 		}
 		return text;
 	}
@@ -173,6 +177,13 @@ export default class Typographie {
 			[/(\u00ab[^\s\u00ab]*)\u00bb(.*?\u00bb.*?\u00bb)/g , '$1\u{00ab}$2']
 		]);
 		return this.performReplace(text, table);
+	}
+	processInnerQoutes(text) {
+		while (text.match(/(\u00ab[^\u00ab\u00bb]*)\u00ab/m)) {
+			text = text.replace(/(\u00ab[^\u00ab\u00bb]*)\u00ab/gm, '$1\u{201e}');
+			text = text.replace(/(\u201e[^\u201e\u201c\u00ab\u00bb]*)\u00bb/gm, '$1\u{201c}');
+		}
+		return text;
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
