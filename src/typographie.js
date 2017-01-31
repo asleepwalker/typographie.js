@@ -40,6 +40,9 @@ export default class Typographie {
 		if (this._actions.includes('dashes')) {
 			text = this.processDashes(text);
 		}
+		if (this._actions.includes('nbsp')) {
+			text = this.processNbsps(text);
+		}
 		return text;
 	}
 	processSpecials(text) {
@@ -208,6 +211,9 @@ export default class Typographie {
 		}
 
 		return this.performReplace(text, table);
+	}
+	processNbsps(text) {
+		return text.replace(/((^|[\s])[a-zа-яёіїєґ\'′]{1,2})[ ]/gi, '$1\u{00a0}');
 	}
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
