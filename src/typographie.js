@@ -4,10 +4,13 @@
 *	https://github.com/asleepwalker/typographie
 */
 
+import he from 'he';
+
 export default class Typographie {
 
-	constructor(actionlist) {
+	constructor(actionlist, input = 'plain', output = 'plain') {
 		this.actions(actionlist);
+		this.mode(input, output);
 		this._preserved = [];
 	}
 
@@ -15,7 +18,14 @@ export default class Typographie {
 		this._actions = actionlist;
 	}
 
-	process(text) {
+	mode(input, output) {
+		this._in = input;
+		this._out = output;
+	}
+
+	process(raw) {
+		let {text, parts: preserved} = this.prepare(raw);
+
 		if (this._actions.includes('specials')) {
 			text = this.processSpecials(text);
 		}
@@ -55,7 +65,8 @@ export default class Typographie {
 		if (this._actions.includes('hellip')) {
 			text = this.processHellips(text);
 		}
-		return text;
+
+		return this.ready(text, preserved);
 	}
 
 	processSpecials(text) {
@@ -164,7 +175,9 @@ export default class Typographie {
 			table.set(/ ([-\u2013])/g, '\u{00a0}$1');
 		}
 
-		let {preservedText, parts} = this.preserveParts(text, [
+		console.log(text);
+
+		let {text: preservedText, parts} = this.preserveParts(text, [
 			/[\d]+([.,][\d]+)+/g,
 			/^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/gi,
 			/((([a-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[a-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[a-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi,
@@ -256,12 +269,58 @@ export default class Typographie {
 			parts.set(code, match);
 			return '{' + code + '}';
 		}));
-		return { preservedText: text, parts };
+		return { text, parts };
 	}
 
 	restoreParts(text, parts) {
 		parts.forEach((o, i) => text = text.replace('{' + i + '}', o));
 		return text;
+	}
+
+	prepare(text) {
+		if (this._in == 'html' && this._out == 'plain') {
+			text = text.replace(/[\n]*<br[\s\/]*>[\n]*/gi, '\n');
+			text = text.replace(/<p[^>]*>(.*?)<\/p>[\s]*/gi, '$1\n\n');
+			text = text.replace(/<[^>]+>/gi, '');
+		} else if (this._in == 'plain' && this._out == 'html') {
+			text = text.replace('<', '&lt;');
+			text = text.replace('>', '&gt;');
+
+			if (this._actions.includes('paragraphs')) {
+				text = text.replace(/^(.+?)$/gm, '<p>$1</p>');
+				text = text.replace(/<\/p>\n<p>/gi, '<br>\n');
+			} else {
+				text = text.replace(/[\n]/gi, '<br>\n');
+			}
+		}
+
+		let preservations = [];
+		if (this._out == 'html') {
+			if (this._in == 'html') {
+				if (this._actions.includes('safehtml')) {
+					preservations.push(/<(code|pre)(\s[^>]*)*>.*?<\/\1>/gi);
+				}
+				preservations.push(/<[^>]+>/gi);
+			} else {
+				preservations.push(/<[\/]{0,1}p>/gi);
+			}
+		}
+
+		return this.preserveParts(text, preservations);
+	}
+
+	ready(text, preserved) {
+		if (this._in == 'html' && this._out == 'plain') {
+			text = he.decode(text, {
+				isAttributeValue: true
+			});
+		} else if (this._actions.includes('entities') && this._out == 'html') {
+			text = he.encode(text, {
+				useNamedReferences: true
+			});
+		}
+
+		return this.restoreParts(text, preserved);
 	}
 
 }
