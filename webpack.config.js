@@ -1,17 +1,29 @@
+const webpack = require('webpack');
+const minify = process.env.NODE_ENV === 'production';
+
 module.exports = {
-	entry: './src/index.js',
+	entry: {
+		'typographie': './src/index.js', // Just build with Babel
+		'typographie.min': './src/index.js' // Minified version
+	},
+	devtool: 'source-map',
 	output: {
 		path: './lib',
-		filename: 'typographie.js',
+		filename: '[name].js',
 		library: 'Typographie',
 		libraryTarget: 'umd',
 		umdNamedDefine: true
 	},
 	module: {
-		loaders: [{
+		rules: [{
 			test: /\.js$/,
 			exclude: /node_modules/,
-			loader: 'babel-loader'
+			use: 'babel-loader'
 		}]
-	}
+	},
+	plugins: [
+		new webpack.optimize.UglifyJsPlugin({
+			include: /\.min\.js$/
+		})
+	]
 }
