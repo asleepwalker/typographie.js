@@ -1,0 +1,29 @@
+{
+  "name": "typographie",
+  "version": "1.0.0",
+  "description": "Library for preparation of russian texts to web publication",
+  "main": "lib/typographie.js",
+  "authors": [
+    "Artyom 'Sleepwalker' Fedosov <mail@asleepwalker.ru>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "text",
+    "web",
+    "typography",
+    "publication",
+    "articles",
+    "copywrighting",
+    "auto",
+    "preparation",
+    "russian"
+  ],
+  "homepage": "https://github.com/asleepwalker/typographie.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
