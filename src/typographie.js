@@ -175,8 +175,6 @@ export default class Typographie {
 			table.set(/ ([-\u2013])/g, '\u{00a0}$1');
 		}
 
-		console.log(text);
-
 		let {text: preservedText, parts} = this.preserveParts(text, [
 			/[\d]+([.,][\d]+)+/g,
 			/^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/gi,
