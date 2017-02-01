@@ -1,11 +1,20 @@
+/*
+*	Typographie.js, v1.0.0
+*	(c) 2014–2017 Artyom "Sleepwalker" Fedosov <mail@asleepwalker.ru>
+*	https://github.com/asleepwalker/typographie
+*/
+
 export default class Typographie {
+
 	constructor(actionlist) {
 		this.actions(actionlist);
 		this._preserved = [];
 	}
+
 	actions(actionlist) {
 		this._actions = actionlist;
 	}
+
 	process(text) {
 		if (this._actions.includes('specials')) {
 			text = this.processSpecials(text);
@@ -48,6 +57,7 @@ export default class Typographie {
 		}
 		return text;
 	}
+
 	processSpecials(text) {
 		const table = new Map([
 			[/(\([cс]\))|(\{copy\})/gi          , '\u{00a9}'],
@@ -78,6 +88,7 @@ export default class Typographie {
 		]);
 		return this.performReplace(text, table);
 	}
+
 	processMath(text) {
 		const table = new Map([
 			[/\{!=}/g           , '\u{2260}'],
@@ -130,11 +141,13 @@ export default class Typographie {
 		]);
 		return this.performReplace(text, table);
 	}
+
 	processMinuses(text) {
 		return text
 			.replace(/([ ])-(?=[\d])/g, '$1\u{2013}')
 			.replace(/^-(?=[\d])/gm, '\u{2013}');
 	}
+
 	processPunctuation(text) {
 		let table = new Map();
 
@@ -160,6 +173,7 @@ export default class Typographie {
 		preservedText = this.performReplace(preservedText, table);
 		return this.restoreParts(preservedText, parts);
 	}
+
 	processSpecialSpaces(text) {
 		const table = new Map([
 			[/([\u2116\u00a7])[\s]*(?=[\d])/g , '$1 '],
@@ -168,6 +182,7 @@ export default class Typographie {
 		]);
 		return this.performReplace(text, table);
 	}
+
 	processAngles(text) {
 		const table = new Map([
 			[/(\d)\*/g               , '$1\u{00b0}'],
@@ -177,9 +192,11 @@ export default class Typographie {
 		]);
 		return this.performReplace(text, table);
 	}
+
 	processMultipleSpaces(text) {
 		return text.replace(/[ ]{2,}/g, ' ');
 	}
+
 	processQoutes(text) {
 		const table = new Map([
 			[/(^|[\s>};\(\[-])"/g                              , '$1\u{00ab}'],
@@ -189,6 +206,7 @@ export default class Typographie {
 		]);
 		return this.performReplace(text, table);
 	}
+
 	processInnerQoutes(text) {
 		while (text.match(/(\u00ab[^\u00ab\u00bb]*)\u00ab/m)) {
 			text = text.replace(/(\u00ab[^\u00ab\u00bb]*)\u00ab/gm, '$1\u{201e}');
@@ -196,11 +214,13 @@ export default class Typographie {
 		}
 		return text;
 	}
+
 	processStackingQoutes(text) {
 		return text
 			.replace(/\u00ab{2,}/g, '\u{00ab}')
 			.replace(/\u00bb{2,}/g, '\u{00bb}');
 	}
+
 	processDashes(text) {
 		let table = new Map([
 			[/(^|\n|["\u201e\u00ab])--?(\s)/gm , '$1\u{2014}$2'],
@@ -215,16 +235,20 @@ export default class Typographie {
 
 		return this.performReplace(text, table);
 	}
+
 	processNbsps(text) {
 		return text.replace(/((^|[\s])[a-zа-яёіїєґ\'′]{1,2})[ ]/gi, '$1\u{00a0}');
 	}
+
 	processHellips(text) {
 		return text.replace(/\.{2,5}/g, '\u{2026}');
 	}
+
 	performReplace(text, table) {
 		table.forEach((o, i) => text = text.replace(i, o));
 		return text;
 	}
+
 	preserveParts(text, exceptions) {
 		let parts = new Map();
 		exceptions.map((pattern) => text = text.replace(pattern, (match) => {
@@ -234,8 +258,10 @@ export default class Typographie {
 		}));
 		return { preservedText: text, parts };
 	}
+
 	restoreParts(text, parts) {
 		parts.forEach((o, i) => text = text.replace('{' + i + '}', o));
 		return text;
 	}
+
 }
