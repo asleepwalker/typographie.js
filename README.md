@@ -13,6 +13,10 @@ Via Bower:
 
 	bower install typographie --save
 
+In a browser:
+
+	<script src="lib/typographie.js"></script>
+
 ## Example
 
 ```
