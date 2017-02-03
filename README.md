@@ -21,7 +21,7 @@ In a browser:
 
 ```
 var Typographie = require('typographie');
-var engine = new Typographie(['inquot', 'dashes', 'specials', 'paragraphs']);
+var engine = new Typographie(['quotes', 'dashes', 'specials', 'paragraphs']);
 
 var raw = 'Сервис "Typographie" - подготовка текстов к веб-публикации онлайн (с) 2014-2017';
 var result = engine.process(raw);
@@ -47,9 +47,9 @@ console.log(result);
 `safehtml` : Don't process text inside of &lt;code&gt; and &lt;pre&gt; blocks.<br>
 `entities` : Replace special chars with HTML entities.
 
-The list should be passed as array, e.g. `['action1', 'action2', 'action3']`.
+If the list of actions was skiped in constructor, all of them will be performed.
 
-Beside defining in the object constructor, use can change configuration by method `actions`:
+Beside defining in the object constructor, you can change configuration by method `actions`:
 
 ```
 engine.actions(['punctuation', 'dblspace']);

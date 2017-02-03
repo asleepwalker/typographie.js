@@ -1,14 +1,30 @@
 /*
-*	Typographie.js, v1.0.0
+*	Typographie.js, v1.0.1
 *	(c) 2014–2017 Artyom "Sleepwalker" Fedosov <mail@asleepwalker.ru>
 *	https://github.com/asleepwalker/typographie
 */
 
 import he from 'he';
 
+const actions = [
+	'quotes',
+	'inquot',
+	'dashes',
+	'angles',
+	'dblspace',
+	'specials',
+	'mathchars',
+	'punctuation',
+	'specialspaces',
+	'nbsp',
+	'hellip',
+	'paragraphs',
+	'safehtml'
+];
+
 export default class Typographie {
 
-	constructor(actionlist, input = 'plain', output = 'plain') {
+	constructor(actionlist = actions, input = 'plain', output = 'plain') {
 		this.actions(actionlist);
 		this.mode(input, output);
 		this._preserved = [];
@@ -24,7 +40,7 @@ export default class Typographie {
 	}
 
 	requested(action) {
-		return this.requested(action);
+		return this._actions.includes(action);
 	}
 
 	process(raw) {
@@ -316,7 +332,7 @@ export default class Typographie {
 			text = he.decode(text, {
 				isAttributeValue: true
 			});
-		} else if (this.requested('entities') && this._out == 'html') {
+		} else if (this._out == 'html' && this.requested('entities')) {
 			text = he.encode(text, {
 				useNamedReferences: true
 			});

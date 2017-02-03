@@ -1,5 +1,5 @@
 /*
-*	Typographie.js, v1.0.0
+*	Typographie.js, v1.0.1
 *	(c) 2014–2017 Artyom "Sleepwalker" Fedosov <mail@asleepwalker.ru>
 *	https://github.com/asleepwalker/typographie
 */

@@ -1,6 +1,6 @@
 {
   "name": "typographie",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for preparation of russian texts to web publication",
   "main": "lib/typographie.js",
   "repository": {
