@@ -23,46 +23,50 @@ export default class Typographie {
 		this._out = output;
 	}
 
+	requested(action) {
+		return this.requested(action);
+	}
+
 	process(raw) {
 		let {text, parts: preserved} = this.prepare(raw);
 
-		if (this._actions.includes('specials')) {
+		if (this.requested('specials')) {
 			text = this.processSpecials(text);
 		}
-		if (this._actions.includes('mathchars')) {
+		if (this.requested('mathchars')) {
 			text = this.processMath(text);
 		}
-		if (this._actions.includes('mathchars') || this._actions.includes('dashes')) {
+		if (this.requested('mathchars') || this.requested('dashes')) {
 			text = this.processMinuses(text);
 		}
-		if (this._actions.includes('punctuation')) {
+		if (this.requested('punctuation')) {
 			text = this.processPunctuation(text);
 		}
-		if (this._actions.includes('specialspaces')) {
+		if (this.requested('specialspaces')) {
 			text = this.processSpecialSpaces(text);
 		}
-		if (this._actions.includes('angles')) {
+		if (this.requested('angles')) {
 			text = this.processAngles(text);
 		}
-		if (this._actions.includes('dblspace')) {
+		if (this.requested('dblspace')) {
 			text = this.processMultipleSpaces(text);
 		}
-		if (this._actions.includes('quotes')) {
+		if (this.requested('quotes')) {
 			text = this.processQoutes(text);
 
-			if (this._actions.includes('inquot')) {
+			if (this.requested('inquot')) {
 				text = this.processInnerQoutes(text);
 			} else {
 				text = this.processStackingQoutes(text);
 			}
 		}
-		if (this._actions.includes('dashes')) {
+		if (this.requested('dashes')) {
 			text = this.processDashes(text);
 		}
-		if (this._actions.includes('nbsp')) {
+		if (this.requested('nbsp')) {
 			text = this.processNbsps(text);
 		}
-		if (this._actions.includes('hellip')) {
+		if (this.requested('hellip')) {
 			text = this.processHellips(text);
 		}
 
@@ -162,7 +166,7 @@ export default class Typographie {
 	processPunctuation(text) {
 		let table = new Map();
 
-		if (this._actions.includes('dashes')) {
+		if (this.requested('dashes')) {
 			table.set(/[-]{2,5}/g, '\u{2013}');
 		}
 
@@ -171,7 +175,7 @@ export default class Typographie {
 		table.set(/([.,!?:)])(?=[^ \n"\'.,;!?&:\]\)<»{)])/g, '$1 ');
 		table.set(/[ ]*(?=[.,;!?:])/g, '');
 
-		if (this._actions.includes('nbsp')) {
+		if (this.requested('nbsp')) {
 			table.set(/ ([-\u2013])/g, '\u{00a0}$1');
 		}
 
@@ -238,7 +242,7 @@ export default class Typographie {
 			[/([\d])-(?=[\d])/gm               , '$1\u{2013}']
 		]);
 
-		if (this._actions.includes('nbsp')) {
+		if (this.requested('nbsp')) {
 			table.set(/(\s)--?($|\s)/g, '\u{00a0}\u{2014}$2');
 		} else {
 			table.set(/(\s)--?($|\s)/g, ' \u{2014}$2');
@@ -284,7 +288,7 @@ export default class Typographie {
 			text = text.replace('<', '&lt;');
 			text = text.replace('>', '&gt;');
 
-			if (this._actions.includes('paragraphs')) {
+			if (this.requested('paragraphs')) {
 				text = text.replace(/^(.+?)$/gm, '<p>$1</p>');
 				text = text.replace(/<\/p>\n<p>/gi, '<br>\n');
 			} else {
@@ -295,7 +299,7 @@ export default class Typographie {
 		let preservations = [];
 		if (this._out == 'html') {
 			if (this._in == 'html') {
-				if (this._actions.includes('safehtml')) {
+				if (this.requested('safehtml')) {
 					preservations.push(/<(code|pre)(\s[^>]*)*>.*?<\/\1>/gi);
 				}
 				preservations.push(/<[^>]+>/gi);
@@ -312,7 +316,7 @@ export default class Typographie {
 			text = he.decode(text, {
 				isAttributeValue: true
 			});
-		} else if (this._actions.includes('entities') && this._out == 'html') {
+		} else if (this.requested('entities') && this._out == 'html') {
 			text = he.encode(text, {
 				useNamedReferences: true
 			});
