@@ -1,7 +1,7 @@
 /*
-*	Typographie.js, v1.0.1
-*	(c) 2014–2017 Artyom "Sleepwalker" Fedosov <mail@asleepwalker.ru>
-*	https://github.com/asleepwalker/typographie
+*  Typographie.js, v1.0.1
+*  (c) 2014–2017 Artyom "Sleepwalker" Fedosov <mail@asleepwalker.ru>
+*  https://github.com/asleepwalker/typographie
 */
 
 import he from 'he';
@@ -19,7 +19,7 @@ const actions = [
 	'nbsp',
 	'hellip',
 	'paragraphs',
-	'safehtml'
+	'safehtml',
 ];
 
 export default class Typographie {
@@ -44,7 +44,7 @@ export default class Typographie {
 	}
 
 	process(raw) {
-		let {text, parts: preserved} = this.prepare(raw);
+		let { text, parts: preserved } = this.prepare(raw);
 
 		if (this.requested('specials')) {
 			text = this.processSpecials(text);
@@ -115,7 +115,7 @@ export default class Typographie {
 			[/\{tau\}/gi                        , '\u{03c4}'],
 			[/\{phi\}/gi                        , '\u{03c6}'],
 			[/\{psi\}/gi                        , '\u{03a8}'],
-			[/\{omega\}/gi                      , '\u{03c9}']
+			[/\{omega\}/gi                      , '\u{03c9}'],
 		]);
 		return this.performReplace(text, table);
 	}
@@ -168,7 +168,7 @@ export default class Typographie {
 			[/\{v}/g            , '\u{221a}'],
 			[/\{v3}/g           , '\u{221b}'],
 			[/\{v4}/g           , '\u{221c}'],
-			[/\{ang}/g          , '\u{2220}']
+			[/\{ang}/g          , '\u{2220}'],
 		]);
 		return this.performReplace(text, table);
 	}
@@ -180,7 +180,7 @@ export default class Typographie {
 	}
 
 	processPunctuation(text) {
-		let table = new Map();
+		const table = new Map();
 
 		if (this.requested('dashes')) {
 			table.set(/[-]{2,5}/g, '\u{2013}');
@@ -195,11 +195,11 @@ export default class Typographie {
 			table.set(/ ([-\u2013])/g, '\u{00a0}$1');
 		}
 
-		let {text: preservedText, parts} = this.preserveParts(text, [
+		let { text: preservedText, parts } = this.preserveParts(text, [
 			/[\d]+([.,][\d]+)+/g,
 			/^[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+$/gi,
 			/((([a-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[a-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[a-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/gi,
-			/[:;.][\'_-]{0,2}[.,edpobnsu*#@|()&\$308ехорвъэ]/gi
+			/[:;.][\'_-]{0,2}[.,edpobnsu*#@|()&\$308ехорвъэ]/gi,
 		]);
 		preservedText = this.performReplace(preservedText, table);
 		return this.restoreParts(preservedText, parts);
@@ -209,7 +209,7 @@ export default class Typographie {
 		const table = new Map([
 			[/([\u2116\u00a7])[\s]*(?=[\d])/g , '$1 '],
 			[/([\d])[\s]*(?=\u00b0[CСF])/g    , '$1 '],
-			[/([\d])[\s]*(?=%)/g              , '$1']
+			[/([\d])[\s]*(?=%)/g              , '$1'],
 		]);
 		return this.performReplace(text, table);
 	}
@@ -219,7 +219,7 @@ export default class Typographie {
 			[/(\d)\*/g               , '$1\u{00b0}'],
 			[/(\d)\'/g               , '$1\u{2032}'],
 			[/(^[^"]*\d)"([^"]*$)/g  , '$1\u{2033}$2'],
-			[/("[^"]*\d)"([^"]*?")/g , '$1\u{2033}$2']
+			[/("[^"]*\d)"([^"]*?")/g , '$1\u{2033}$2'],
 		]);
 		return this.performReplace(text, table);
 	}
@@ -233,7 +233,7 @@ export default class Typographie {
 			[/(^|[\s>};\(\[-])"/g                              , '$1\u{00ab}'],
 			[/"([\s-\.!,:;\?\)\]\n\r]|$)/g                     , '\u{00bb}$1'],
 			[/([^\s{])"([^\s}])/g                              , '$1\u{00bb}$2'],
-			[/(\u00ab[^\s\u00ab]*)\u00bb(.*?\u00bb.*?\u00bb)/g , '$1\u{00ab}$2']
+			[/(\u00ab[^\s\u00ab]*)\u00bb(.*?\u00bb.*?\u00bb)/g , '$1\u{00ab}$2'],
 		]);
 		return this.performReplace(text, table);
 	}
@@ -255,7 +255,7 @@ export default class Typographie {
 	processDashes(text) {
 		let table = new Map([
 			[/(^|\n|["\u201e\u00ab])--?(\s)/gm , '$1\u{2014}$2'],
-			[/([\d])-(?=[\d])/gm               , '$1\u{2013}']
+			[/([\d])-(?=[\d])/gm               , '$1\u{2013}'],
 		]);
 
 		if (this.requested('nbsp')) {
@@ -281,26 +281,26 @@ export default class Typographie {
 	}
 
 	preserveParts(text, exceptions) {
-		let parts = new Map();
-		exceptions.map((pattern) => text = text.replace(pattern, (match) => {
+		const parts = new Map();
+		exceptions.map(pattern => text = text.replace(pattern, (match) => {
 			const code = String(Math.random()).substr(2);
 			parts.set(code, match);
-			return '{' + code + '}';
+			return `{${code}}`;
 		}));
 		return { text, parts };
 	}
 
 	restoreParts(text, parts) {
-		parts.forEach((o, i) => text = text.replace('{' + i + '}', o));
+		parts.forEach((o, i) => text = text.replace(`{${i}}`, o));
 		return text;
 	}
 
 	prepare(text) {
-		if (this._in == 'html' && this._out == 'plain') {
+		if (this._in === 'html' && this._out === 'plain') {
 			text = text.replace(/[\n]*<br[\s\/]*>[\n]*/gi, '\n');
 			text = text.replace(/<p[^>]*>(.*?)<\/p>[\s]*/gi, '$1\n\n');
 			text = text.replace(/<[^>]+>/gi, '');
-		} else if (this._in == 'plain' && this._out == 'html') {
+		} else if (this._in === 'plain' && this._out === 'html') {
 			text = text.replace('<', '&lt;');
 			text = text.replace('>', '&gt;');
 
@@ -313,8 +313,8 @@ export default class Typographie {
 		}
 
 		let preservations = [];
-		if (this._out == 'html') {
-			if (this._in == 'html') {
+		if (this._out === 'html') {
+			if (this._in === 'html') {
 				if (this.requested('safehtml')) {
 					preservations.push(/<(code|pre)(\s[^>]*)*>.*?<\/\1>/gi);
 				}
@@ -328,17 +328,16 @@ export default class Typographie {
 	}
 
 	ready(text, preserved) {
-		if (this._in == 'html' && this._out == 'plain') {
+		if (this._in === 'html' && this._out === 'plain') {
 			text = he.decode(text, {
-				isAttributeValue: true
+				isAttributeValue: true,
 			});
-		} else if (this._out == 'html' && this.requested('entities')) {
+		} else if (this._out === 'html' && this.requested('entities')) {
 			text = he.encode(text, {
-				useNamedReferences: true
+				useNamedReferences: true,
 			});
 		}
 
 		return this.restoreParts(text, preserved);
 	}
-
 }

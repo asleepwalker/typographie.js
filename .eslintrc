@@ -1,0 +1,15 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "indent": ["error", "tab"],
+    "no-underscore-dangle": "warn",
+    "no-param-reassign": "warn",
+    "no-multi-spaces": "warn",
+    "comma-spacing": "warn",
+    "class-methods-use-this": "warn",
+    "prefer-const": "warn",
+    "no-return-assign": "warn",
+    "no-useless-escape": "warn",
+    "no-tabs": "off"
+  }
+}
