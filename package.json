@@ -1,45 +1,45 @@
 {
-  "name": "typographie",
-  "version": "1.0.1",
-  "description": "Library for preparation of russian texts to web publication",
-  "main": "lib/typographie.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/asleepwalker/typographie.js.git"
-  },
-  "keywords": [
-    "text",
-    "web",
-    "typography",
-    "publication",
-    "articles",
-    "copywrighting",
-    "auto",
-    "preparation",
-    "russian"
-  ],
-  "author": "Artyom 'Sleepwalker' Fedosov <mail@asleepwalker.ru>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/asleepwalker/typographie.js/issues"
-  },
-  "scripts": {
-    "build": "webpack",
-    "lint": "eslint src/",
-    "dev": "webpack --watch"
-  },
-  "devDependencies": {
-    "eslint": "3.14.1",
-    "eslint-config-airbnb-base": "11.0.1",
-    "eslint-plugin-import": "2.2.0"
-  },
-  "dependencies": {
-    "babel-core": "6.22.1",
-    "babel-loader": "6.2.10",
-    "babel-plugin-add-module-exports": "0.2.1",
-    "babel-preset-es2015": "6.22.0",
-    "core-js": "2.4.1",
-    "he": "1.1.1",
-    "webpack": "2.2.1"
-  }
+	"name": "typographie",
+	"version": "1.0.1",
+	"description": "Library for preparation of russian texts to web publication",
+	"main": "lib/typographie.js",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/asleepwalker/typographie.js.git"
+	},
+	"keywords": [
+		"text",
+		"web",
+		"typography",
+		"publication",
+		"articles",
+		"copywrighting",
+		"auto",
+		"preparation",
+		"russian"
+	],
+	"author": "Artyom 'Sleepwalker' Fedosov <mail@asleepwalker.ru>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/asleepwalker/typographie.js/issues"
+	},
+	"scripts": {
+		"build": "webpack",
+		"lint": "eslint src/typographie.js",
+		"dev": "webpack --watch"
+	},
+	"devDependencies": {
+		"webpack": "2.2.1",
+		"babel-core": "6.22.1",
+		"babel-loader": "6.2.10",
+		"babel-plugin-add-module-exports": "0.2.1",
+		"babel-preset-es2015": "6.22.0",
+		"core-js": "2.4.1",
+		"eslint": "3.14.1",
+		"eslint-config-airbnb-base": "11.0.1",
+		"eslint-plugin-import": "2.2.0"
+	},
+	"dependencies": {
+		"he": "1.1.1"
+	}
 }
